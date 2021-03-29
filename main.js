@@ -21,10 +21,10 @@ window.addEventListener('DOMContentLoaded', DOMContentLoaded => {
 
     // Bringing in the Angry Dude
     const player_Avatar = new Image();
-    player_Avatar.src = 'sprites/angry_Dude_V1.png';
+    player_Avatar.src = 'sprites/angry_Dude_V2.png';
 
     // Player Input
-    const movement = (ArrowRight: false, ArrowLeft: false, ArrowDown: false, ArrowUp: false);
+    const movement = {ArrowRight: false, ArrowLeft: false, ArrowDown: false, ArrowUp: false};
     document.addEventListener('keydown', keydown => {
         if(movement.hasOwnProperty(keydown.key)) {
             movement[keydown.key] = true;
@@ -50,22 +50,22 @@ window.addEventListener('DOMContentLoaded', DOMContentLoaded => {
         }
         if(parsed.Message === 'goodbye') {
             console.log('GOODBYE');
-            delete enemies.(parsed.Name);
+            delete enemies[parsed.Name];
             return;
         }
         enemies[parsed.Name] = JSON.parse(parsed.Message);
     });
     const calm_Dude = new Image();
-    calm_Dude.src = 'sprites/calm_Dude_V1.png';
+    calm_Dude.src = 'sprites/calm_Dude_V2.png';
     socket.addEventListener('beforeunload', beforeunload => {
         send('goodbye');
         beforeunload['returnValue'] = null;
     });
 
     //Patterns
-    const petterns = {};
-    const rock = new Image{};
-    rock.src = 'sprites/rock_V2.png';
+    const patterns = {};
+    const rock = new Image();
+    rock.src = 'sprites/rock_V3.png';
     rock.addEventListener('load', load =>{
         patterns.rock = render.createPattern(rock, 'repeat');
     });
@@ -82,13 +82,32 @@ window.addEventListener('DOMContentLoaded', DOMContentLoaded => {
             this.h = h;
         }
     }
-    const O_Body = [];
-    O_Body.push(new O_Body(64, 64, 32, 40))
+    const O_Bodys = [];
+    // add more rocks to make a maze
+    O_Bodys.push(new O_Body(114, 0, 32, 140))
+    O_Bodys.push(new O_Body(-16, 0, 32, 140))
+    O_Bodys.push(new O_Body(-16, 250, 750, 14))
+    O_Bodys.push(new O_Body(750, 250, 32, 800))
+    O_Bodys.push(new O_Body(-155, -400, 32, 800))
+    O_Bodys.push(new O_Body(-155, -400, 750, 45))
+    O_Bodys.push(new O_Body(600, -400, 32, 450))
+    O_Bodys.push(new O_Body(-750, 365, 2800, 32))
+    O_Bodys.push(new O_Body(750, -365, 32, 3200))
+    O_Bodys.push(new O_Body(400, 200, 40, 32))
+    O_Bodys.push(new O_Body(-125, 100, 40, 32))
+    O_Bodys.push(new O_Body(-75, -240, 40, 32))
+    O_Bodys.push(new O_Body(125, 200, 130, 32))
+    O_Bodys.push(new O_Body(-547, 200, 40, 65))
+    O_Bodys.push(new O_Body(500, -345, 40, 62))
+    O_Bodys.push(new O_Body(0, -145, 240, 62))
+    O_Bodys.push(new O_Body(400, -345, 40, 262))
+    O_Bodys.push(new O_Body(-200, -145, 40, 162))
+    O_Bodys.push(new O_Body(432, -245, 240, 62))
 
     //The Animation Loop
     let frame_number = false;
     let frame_count = 0;
-    const IMG_SIDE = 49;
+    const IMG_SIDE = 45;
     let player_direct = 0;
     let x = 16, y = 16;
     const animation = timestamo => {
@@ -101,7 +120,7 @@ window.addEventListener('DOMContentLoaded', DOMContentLoaded => {
         render.scale(u, u);
         render.fillStyle = patterns.grass;
         render.fillRect(0, 0, w, h);
-        render.translate(-Math.floor(x / U_Scale) * U_Scale, -Math.floor / U_Scale) * U_Scale);
+        render.translate(-Math.floor(x / U_Scale) * U_Scale, -Math.floor(y / U_Scale) * U_Scale);
 
 
         //Moving Angry Dude
@@ -109,33 +128,33 @@ window.addEventListener('DOMContentLoaded', DOMContentLoaded => {
         let vx = +right - +left;
         let vy = +down - +up;
         if(right || up || left || down) {
-            player_direct = right ? 1 : up ? 2 down ? 3 : 0;
-            if(frame_count % 30 == 0) {
+            player_direct = right ? 1 : up ? 2: down ? 3 : 0;
+            if(frame_count % 10 == 0) {
                 frame_number = !frame_number;
       }
      }
 
      //Colliders
-     O_Body.forEach(O_Body => {
-         if(O_Body.y <= y + IMG_SIDE && y < O_Body.y + O_Body.h) {
-            if(x + IMG_SIDE <= O_Body.x && O_Body.x < x + IMG_SIDE + vx) {
+     O_Bodys.forEach(o_Body => {
+        if(o_Body.y <= y + IMG_SIDE && y < o_Body.y + o_Body.h) {
+            if(x + IMG_SIDE <= o_Body.x && o_Body.x < x + IMG_SIDE + vx) {
                 vx = 0;
-                x + O_Body.x - IMG_SIDE;
-         }
-         if(O_Body.x + O_Body.w <= x && x + vx < O_Body.x + O_Body.y) {
-             vx = 0;
-             x = O_Body.x + O_Body.w;
-         }
-         if(O_Body.x <= x + IMG_SIDE && x <= O_Body.x + O_Body.w) {
-             if(y + IMG_SIDE <= O_Body.y && O_Body.y < y + IMG_SIDE + vy) {
+                x = o_Body.x - IMG_SIDE;
+            }
+            if(o_Body.x + o_Body.w <= x && x + vx < o_Body.x + o_Body.w) {
+                vx = 0;
+                x = o_Body.x + o_Body.w;
+            }
+        }
+        if(o_Body.x <= x + IMG_SIDE && x <= o_Body.x + o_Body.w) {
+            if(y + IMG_SIDE <= o_Body.y && o_Body.y < y + IMG_SIDE + vy) {
                  vy = 0;
-                 y = O_Body - IMG_SIDE;
-             }
-             if(O_Body.y + O_Body.h <= y + vy < O_Body.y + O_Body.h) {
+                 y = o_Body.y - IMG_SIDE;
+            }
+            if(o_Body.y + o_Body.h <= y && y + vy < o_Body.y + o_Body.h) {
                  vy = 0;
-                 y = O_Body.y + O_Body.h;
-             }
-         }
+                 y = o_Body.y + o_Body.h;
+            }
         }
      });
      x += vx;
@@ -146,8 +165,8 @@ window.addEventListener('DOMContentLoaded', DOMContentLoaded => {
 
         // Render Stuff
         render.fillStyle = patterns.rock;
-        O_Body.forEach(O_Body => {
-            fillRect(O_Body.x, O_Body.y, O_Body.w, O_Body.h);
+        O_Bodys.forEach(o_Body => {
+            render.fillRect(o_Body.x, o_Body.y, o_Body.w, o_Body.h);
         });
         Object.values(enemies).forEach(enemy => {
            render.drawImage(calm_Dude, 0, 0, IMG_SIDE, IMG_SIDE, enemy.x, enemy.y, IMG_SIDE, IMG_SIDE);
@@ -155,7 +174,7 @@ window.addEventListener('DOMContentLoaded', DOMContentLoaded => {
                console.log('COLLISION')
            }
         });
-        render.drawImage(player_Avatar, +frame_number * IMG_SIDE, player_direct * IMG_SIDE, IMG_SIDE, IMG_SIDE, x, 16, y, IMG_SIDE);
+        render.drawImage(player_Avatar, +frame_number * IMG_SIDE, player_direct * IMG_SIDE, IMG_SIDE, IMG_SIDE, x, y, IMG_SIDE, IMG_SIDE);
     
         render.restore();
         window.requestAnimationFrame(animation);
